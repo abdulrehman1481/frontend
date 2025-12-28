@@ -30,6 +30,11 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.abrehman.frontend"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d2365a30-9139-49ab-9cf8-59aee91d808a"
+      }
     }
   }
 }
