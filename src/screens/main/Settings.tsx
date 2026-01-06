@@ -1,31 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Switch, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../App';
 
-type RootStackParamList = {
-  Landing: undefined;
-  Welcome: undefined;
-  Login: undefined;
-  Signup: undefined;
-  Dashboard: undefined;
-  DeviceScan: undefined;
-  DeviceDetails: { deviceId: string };
-  DeviceConnected: { deviceId: string };
-  SessionList: undefined;
-  CreateSession: undefined;
-  SessionRunning: { sessionId: string };
-  LiveTelemetry: { sessionId: string };
-  History: undefined;
-  HistoryDetail: { historyId: string };
-  Settings: undefined;
-};
+type SettingsNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
-
-export default function Settings({ navigation }: Props) {
+export default function Settings() {
+  const navigation = useNavigation<SettingsNavigationProp>();
   const [notifications, setNotifications] = useState(true);
   const [autoConnect, setAutoConnect] = useState(false);
   const [dataSync, setDataSync] = useState(true);
@@ -37,18 +21,17 @@ export default function Settings({ navigation }: Props) {
       'Are you sure you want to logout?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Logout', style: 'destructive', onPress: () => navigation.navigate('Welcome') },
-      ]
-    );
-  };
-
-  const handleResetData = () => {
-    Alert.alert(
-      'Reset Data',
-      'This will delete all your session data. This action cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Reset', style: 'destructive', onPress: () => {/* Handle reset */} },
+        { 
+          text: 'Logout', 
+          style: 'destructive', 
+          onPress: () => {
+            // Clear any stored data here (AsyncStorage, etc.)
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            });
+          } 
+        },
       ]
     );
   };
@@ -58,11 +41,11 @@ export default function Settings({ navigation }: Props) {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#0f172a" />
-          </TouchableOpacity>
+          <View style={styles.headerIcon}>
+            <Ionicons name="settings" size={28} color="#5DADE2" />
+          </View>
           <Text style={styles.headerTitle}>Settings</Text>
-          <View style={{ width: 24 }} />
+          <Text style={styles.headerSubtitle}>Manage your preferences</Text>
         </View>
 
         {/* Content */}
@@ -72,11 +55,11 @@ export default function Settings({ navigation }: Props) {
             <Text style={styles.sectionTitle}>Profile</Text>
             <View style={styles.profileCard}>
               <View style={styles.profileAvatar}>
-                <Ionicons name="person" size={32} color="#3b82f6" />
+                <Ionicons name="person" size={32} color="#5DADE2" />
               </View>
               <View style={styles.profileInfo}>
-                <Text style={styles.profileName}>John Doe</Text>
-                <Text style={styles.profileEmail}>john.doe@example.com</Text>
+                <Text style={styles.profileName}>Dr. Sarah</Text>
+                <Text style={styles.profileEmail}>sarah@example.com</Text>
               </View>
               <TouchableOpacity style={styles.editButton}>
                 <Ionicons name="pencil" size={20} color="#64748b" />
@@ -90,7 +73,7 @@ export default function Settings({ navigation }: Props) {
             <View style={styles.settingsContainer}>
               <View style={styles.settingItem}>
                 <View style={styles.settingLeft}>
-                  <Ionicons name="bluetooth" size={24} color="#3b82f6" />
+                  <Ionicons name="bluetooth" size={24} color="#5DADE2" />
                   <View style={styles.settingText}>
                     <Text style={styles.settingTitle}>Auto-connect</Text>
                     <Text style={styles.settingSubtitle}>Automatically connect to last device</Text>
@@ -99,14 +82,14 @@ export default function Settings({ navigation }: Props) {
                 <Switch
                   value={autoConnect}
                   onValueChange={setAutoConnect}
-                  trackColor={{ false: '#e2e8f0', true: '#3b82f6' }}
-                  thumbColor={autoConnect ? '#ffffff' : '#f4f4f4'}
+                  trackColor={{ false: '#cbd5e1', true: '#5DADE2' }}
+                  thumbColor={autoConnect ? '#ffffff' : '#f1f5f9'}
                 />
               </View>
 
               <View style={styles.settingItem}>
                 <View style={styles.settingLeft}>
-                  <Ionicons name="volume-high" size={24} color="#10b981" />
+                  <Ionicons name="volume-high" size={24} color="#5DADE2" />
                   <View style={styles.settingText}>
                     <Text style={styles.settingTitle}>Sound Effects</Text>
                     <Text style={styles.settingSubtitle}>Play sounds during sessions</Text>
@@ -115,8 +98,8 @@ export default function Settings({ navigation }: Props) {
                 <Switch
                   value={soundEnabled}
                   onValueChange={setSoundEnabled}
-                  trackColor={{ false: '#e2e8f0', true: '#10b981' }}
-                  thumbColor={soundEnabled ? '#ffffff' : '#f4f4f4'}
+                  trackColor={{ false: '#cbd5e1', true: '#5DADE2' }}
+                  thumbColor={soundEnabled ? '#ffffff' : '#f1f5f9'}
                 />
               </View>
             </View>
@@ -128,7 +111,7 @@ export default function Settings({ navigation }: Props) {
             <View style={styles.settingsContainer}>
               <View style={styles.settingItem}>
                 <View style={styles.settingLeft}>
-                  <Ionicons name="notifications" size={24} color="#f59e0b" />
+                  <Ionicons name="notifications" size={24} color="#5DADE2" />
                   <View style={styles.settingText}>
                     <Text style={styles.settingTitle}>Notifications</Text>
                     <Text style={styles.settingSubtitle}>Session reminders and updates</Text>
@@ -137,14 +120,14 @@ export default function Settings({ navigation }: Props) {
                 <Switch
                   value={notifications}
                   onValueChange={setNotifications}
-                  trackColor={{ false: '#e2e8f0', true: '#f59e0b' }}
-                  thumbColor={notifications ? '#ffffff' : '#f4f4f4'}
+                  trackColor={{ false: '#cbd5e1', true: '#5DADE2' }}
+                  thumbColor={notifications ? '#ffffff' : '#f1f5f9'}
                 />
               </View>
 
               <View style={styles.settingItem}>
                 <View style={styles.settingLeft}>
-                  <Ionicons name="cloud" size={24} color="#8b5cf6" />
+                  <Ionicons name="cloud" size={24} color="#5DADE2" />
                   <View style={styles.settingText}>
                     <Text style={styles.settingTitle}>Data Sync</Text>
                     <Text style={styles.settingSubtitle}>Sync data across devices</Text>
@@ -153,67 +136,10 @@ export default function Settings({ navigation }: Props) {
                 <Switch
                   value={dataSync}
                   onValueChange={setDataSync}
-                  trackColor={{ false: '#e2e8f0', true: '#8b5cf6' }}
-                  thumbColor={dataSync ? '#ffffff' : '#f4f4f4'}
+                  trackColor={{ false: '#cbd5e1', true: '#5DADE2' }}
+                  thumbColor={dataSync ? '#ffffff' : '#f1f5f9'}
                 />
               </View>
-            </View>
-          </View>
-
-          {/* Data Management */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Data Management</Text>
-            <View style={styles.dataContainer}>
-              <TouchableOpacity
-                style={styles.dataButton}
-                onPress={() => {/* Handle export */}}
-                activeOpacity={0.8}>
-                <Ionicons name="download" size={20} color="#3b82f6" />
-                <Text style={styles.dataButtonText}>Export All Data</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.dataButton}
-                onPress={() => {/* Handle backup */}}
-                activeOpacity={0.8}>
-                <Ionicons name="cloud-upload" size={20} color="#10b981" />
-                <Text style={styles.dataButtonText}>Backup to Cloud</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.dataButton, styles.dangerButton]}
-                onPress={handleResetData}
-                activeOpacity={0.8}>
-                <Ionicons name="trash" size={20} color="#dc2626" />
-                <Text style={styles.dangerButtonText}>Reset All Data</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* App Info */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>About</Text>
-            <View style={styles.infoContainer}>
-              <View style={styles.infoItem}>
-                <Text style={styles.infoLabel}>Version</Text>
-                <Text style={styles.infoValue}>1.0.0</Text>
-              </View>
-              <View style={styles.infoItem}>
-                <Text style={styles.infoLabel}>Build</Text>
-                <Text style={styles.infoValue}>2024.01.15</Text>
-              </View>
-              <TouchableOpacity
-                style={styles.infoButton}
-                onPress={() => {/* Handle privacy */}}
-                activeOpacity={0.8}>
-                <Text style={styles.infoButtonText}>Privacy Policy</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.infoButton}
-                onPress={() => {/* Handle terms */}}
-                activeOpacity={0.8}>
-                <Text style={styles.infoButtonText}>Terms of Service</Text>
-              </TouchableOpacity>
             </View>
           </View>
 
@@ -236,58 +162,61 @@ export default function Settings({ navigation }: Props) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#ffffff',
   },
   scrollView: {
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
+    marginBottom: 24,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: 'white',
     paddingHorizontal: 20,
     paddingTop: 20,
-    paddingBottom: 16,
   },
-  backButton: {
-    padding: 8,
+  headerIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#e0f2fe',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#0f172a',
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#1e293b',
+    marginBottom: 4,
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: '#64748b',
   },
   content: {
-    padding: 20,
-    gap: 28,
+    paddingHorizontal: 20,
+    paddingBottom: 32,
   },
   section: {
-    gap: 12,
+    marginBottom: 24,
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#0f172a',
-    letterSpacing: -0.3,
+    fontWeight: '600',
+    color: '#1e293b',
+    marginBottom: 12,
   },
   profileCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#f8fafc',
     borderRadius: 12,
     padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
   },
   profileAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#eff6ff',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#e0f2fe',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
@@ -298,7 +227,8 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#0f172a',
+    color: '#1e293b',
+    marginBottom: 2,
   },
   profileEmail: {
     fontSize: 14,
@@ -308,7 +238,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   settingsContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#f8fafc',
     borderRadius: 12,
     padding: 16,
     gap: 16,
@@ -330,70 +260,18 @@ const styles = StyleSheet.create({
   settingTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#0f172a',
+    color: '#1e293b',
   },
   settingSubtitle: {
     fontSize: 14,
     color: '#64748b',
-  },
-  dataContainer: {
-    gap: 8,
-  },
-  dataButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-  },
-  dataButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#0f172a',
-  },
-  dangerButton: {
-    borderColor: '#fecaca',
-  },
-  dangerButtonText: {
-    color: '#dc2626',
-  },
-  infoContainer: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-    gap: 12,
-  },
-  infoItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  infoLabel: {
-    fontSize: 16,
-    color: '#64748b',
-  },
-  infoValue: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#0f172a',
-  },
-  infoButton: {
-    paddingVertical: 8,
-  },
-  infoButtonText: {
-    fontSize: 16,
-    color: '#3b82f6',
-    fontWeight: '500',
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,

@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
-  Landing: undefined;
-  Welcome: undefined;
   Login: undefined;
   Signup: undefined;
-  Dashboard: undefined;
+  BasicInfo: undefined;
+  Questionnaire: undefined;
+  MainTabs: undefined;
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
@@ -18,29 +18,44 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 export default function Login({ navigation }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [language, setLanguage] = useState('English');
 
-  const handleLogin = () => {
-    // For MVP, just show success and navigate to Dashboard
-    Alert.alert('Success', 'Logged in!');
-    navigation.navigate('Dashboard');
+  const handleGetStarted = () => {
+    // Navigate to Basic Info for first-time users
+    navigation.navigate('BasicInfo');
+  };
+
+  const handleSignIn = () => {
+    // For existing users, navigate directly to Main Tabs
+    navigation.navigate('MainTabs');
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <LinearGradient colors={['#f8fafc', '#e2e8f0']} style={styles.gradient}>
+      <LinearGradient colors={['#A3D9F0', '#5DADE2']} style={styles.gradient}>
         <View style={styles.content}>
+          {/* Logo/Header Section */}
           <View style={styles.header}>
-            <LinearGradient colors={['#3b82f6', '#2563eb']} style={styles.iconWrapper}>
-              <Ionicons name="log-in" size={40} color="white" />
-            </LinearGradient>
-            <Text style={styles.title}>Log In</Text>
+            <View style={styles.logoContainer}>
+              <LinearGradient colors={['#3b82f6', '#2563eb']} style={styles.logoBg}>
+                <Ionicons name="musical-notes" size={32} color="white" />
+              </LinearGradient>
+            </View>
+            <Text style={styles.appTitle}>AudioStim Pro</Text>
+            <Text style={styles.appSubtitle}>Professional Audio Stimulation Therapy</Text>
+            <Text style={styles.tagline}>
+              Advanced neurostimulation technology for medical professionals and researchers
+            </Text>
           </View>
 
-          <View style={styles.form}>
+          {/* Login Form for Sign In */}
+          <View style={styles.formSection}>
             <View style={styles.inputContainer}>
+              <Ionicons name="mail-outline" size={20} color="#64748b" style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Email"
+                placeholderTextColor="#94a3b8"
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -48,9 +63,11 @@ export default function Login({ navigation }: Props) {
               />
             </View>
             <View style={styles.inputContainer}>
+              <Ionicons name="lock-closed-outline" size={20} color="#64748b" style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Password"
+                placeholderTextColor="#94a3b8"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -58,14 +75,30 @@ export default function Login({ navigation }: Props) {
             </View>
           </View>
 
+          {/* Buttons */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <LinearGradient colors={['#3b82f6', '#2563eb']} style={styles.loginGradient}>
-                <Text style={styles.loginButtonText}>Log In</Text>
+            <TouchableOpacity style={styles.getStartedButton} onPress={handleGetStarted}>
+              <Text style={styles.getStartedButtonText}>Get Started</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
+              <LinearGradient colors={['#3b82f6', '#2563eb']} style={styles.signInGradient}>
+                <Text style={styles.signInButtonText}>Sign In</Text>
               </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.signupLink} onPress={() => navigation.navigate('Signup')}>
-              <Text style={styles.signupLinkText}>Don&apos;t have an account? Sign Up</Text>
+          </View>
+
+          {/* Footer Links */}
+          <View style={styles.footer}>
+            <TouchableOpacity style={styles.footerLink}>
+              <Ionicons name="document-text-outline" size={18} color="#1e293b" />
+              <Text style={styles.footerLinkText}>Terms & Conditions</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.languageSelector}>
+              <Ionicons name="language-outline" size={18} color="#1e293b" />
+              <Text style={styles.languageSelectorText}>{language}</Text>
+              <Ionicons name="chevron-down-outline" size={16} color="#1e293b" />
             </TouchableOpacity>
           </View>
         </View>
@@ -77,7 +110,7 @@ export default function Login({ navigation }: Props) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#A3D9F0',
   },
   gradient: {
     flex: 1,
@@ -85,74 +118,122 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
+    paddingTop: 40,
+    paddingBottom: 24,
   },
   header: {
-    marginBottom: 48,
     alignItems: 'center',
-    paddingTop: 48,
+    marginBottom: 40,
   },
-  iconWrapper: {
-    marginBottom: 32,
-    height: 80,
-    width: 80,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 16,
-  },
-  title: {
+  logoContainer: {
     marginBottom: 16,
-    textAlign: 'center',
-    fontSize: 30,
+  },
+  logoBg: {
+    width: 80,
+    height: 80,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  appTitle: {
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#1e293b',
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  form: {
-    marginBottom: 32,
+  appSubtitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  tagline: {
+    fontSize: 13,
+    color: '#1e293b',
+    textAlign: 'center',
+    paddingHorizontal: 20,
+    lineHeight: 18,
+  },
+  formSection: {
+    marginBottom: 24,
   },
   inputContainer: {
-    marginBottom: 16,
-    borderRadius: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: 'white',
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    marginBottom: 12,
+  },
+  inputIcon: {
+    marginRight: 12,
   },
   input: {
+    flex: 1,
     color: '#1e293b',
+    fontSize: 16,
   },
   buttonContainer: {
-    gap: 16,
-    paddingBottom: 48,
+    marginBottom: 24,
   },
-  loginButton: {
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+  getStartedButton: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    paddingVertical: 16,
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: '#3b82f6',
   },
-  loginGradient: {
-    padding: 16,
-    borderRadius: 16,
-    justifyContent: 'center',
+  getStartedButtonText: {
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#3b82f6',
   },
-  loginButtonText: {
+  signInButton: {
+    borderRadius: 12,
+  },
+  signInGradient: {
+    paddingVertical: 16,
+    borderRadius: 12,
+  },
+  signInButtonText: {
     textAlign: 'center',
     fontSize: 18,
     fontWeight: '600',
     color: 'white',
   },
-  signupLink: {
-    padding: 16,
+  footer: {
+    marginTop: 'auto',
+    gap: 16,
   },
-  signupLinkText: {
-    textAlign: 'center',
-    fontSize: 16,
+  footerLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 12,
+  },
+  footerLinkText: {
+    fontSize: 15,
     fontWeight: '500',
-    color: '#2563eb',
+    color: '#1e293b',
+  },
+  languageSelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 8,
+  },
+  languageSelectorText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#1e293b',
   },
 });

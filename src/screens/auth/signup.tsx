@@ -6,11 +6,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
-  Landing: undefined;
-  Welcome: undefined;
   Login: undefined;
   Signup: undefined;
-  Dashboard: undefined;
+  MainTabs: undefined;
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Signup'>;
@@ -32,13 +30,14 @@ export default function Signup({ navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <LinearGradient colors={['#f8fafc', '#e2e8f0']} style={styles.gradient}>
+      <LinearGradient colors={['#ffffff', '#e0f2fe']} style={styles.gradient}>
         <View style={styles.content}>
           <View style={styles.header}>
-            <LinearGradient colors={['#10b981', '#059669']} style={styles.iconWrapper}>
+            <LinearGradient colors={['#5DADE2', '#48A0D4']} style={styles.iconWrapper}>
               <Ionicons name="person-add" size={40} color="white" />
             </LinearGradient>
             <Text style={styles.title}>Sign Up</Text>
+            <Text style={styles.subtitle}>Create your wellness account</Text>
           </View>
 
           <View style={styles.form}>
@@ -74,7 +73,7 @@ export default function Signup({ navigation }: Props) {
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
-              <LinearGradient colors={['#10b981', '#059669']} style={styles.signupGradient}>
+              <LinearGradient colors={['#5DADE2', '#48A0D4']} style={styles.signupGradient}>
                 <Text style={styles.signupButtonText}>Sign Up</Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -91,7 +90,7 @@ export default function Signup({ navigation }: Props) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#ffffff',
   },
   gradient: {
     flex: 1,
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
     paddingTop: 48,
   },
   iconWrapper: {
-    marginBottom: 32,
+    marginBottom: 24,
     height: 80,
     width: 80,
     alignItems: 'center',
@@ -114,44 +113,47 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   title: {
-    marginBottom: 16,
+    marginBottom: 8,
     textAlign: 'center',
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: 'bold',
     color: '#1e293b',
+  },
+  subtitle: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#64748b',
   },
   form: {
     marginBottom: 32,
   },
   inputContainer: {
     marginBottom: 16,
-    borderRadius: 16,
+    borderRadius: 12,
     backgroundColor: 'white',
     padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
   },
   input: {
     color: '#1e293b',
+    fontSize: 16,
   },
   buttonContainer: {
     gap: 16,
     paddingBottom: 48,
   },
   signupButton: {
-    borderRadius: 16,
-    shadowColor: '#000',
+    borderRadius: 12,
+    shadowColor: '#5DADE2',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
   },
   signupGradient: {
-    padding: 16,
-    borderRadius: 16,
+    padding: 18,
+    borderRadius: 12,
     justifyContent: 'center',
   },
   signupButtonText: {
@@ -167,6 +169,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '500',
-    color: '#059669',
+    color: '#5DADE2',
   },
 });
