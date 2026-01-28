@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { PsychologicalStackParamList } from '../../navigation/PsychologicalStack';
+
+type NavigationProp = NativeStackNavigationProp<PsychologicalStackParamList>;
 
 type QuestionnaireStatus = 'not-started' | 'completed';
 
@@ -10,17 +15,20 @@ interface Questionnaire {
   name: string;
   fullName: string;
   status: QuestionnaireStatus;
+  screen?: keyof PsychologicalStackParamList;
 }
 
 export default function PsychologicalInsight() {
+  const navigation = useNavigation<NavigationProp>();
+  
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([
-    { id: 'gad7', name: 'GAD-7', fullName: 'Generalized anxiety', status: 'not-started' },
+    { id: 'gad7', name: 'GAD-7', fullName: 'Generalized anxiety', status: 'not-started', screen: 'GAD7Questionnaire' },
     { id: 'pss10', name: 'PSS-10', fullName: 'Subjective stress', status: 'not-started' },
-    { id: 'phq9', name: 'PHQ-9', fullName: 'Depressive symptoms', status: 'not-started' },
-    { id: 'bai', name: 'BAI', fullName: 'Somatic & cognitive Anxiety', status: 'not-started' },
-    { id: 'pcl5', name: 'PCL-5', fullName: 'PTSD', status: 'not-started' },
-    { id: 'psqi', name: 'PSQI', fullName: 'Sleep quality', status: 'not-started' },
-    { id: 'bdi2', name: 'BDI-II', fullName: 'Depressive Severity', status: 'not-started' },
+    { id: 'phq9', name: 'PHQ-9', fullName: 'Depressive symptoms', status: 'not-started', screen: 'PHQ9Questionnaire' },
+    { id: 'bai', name: 'BAI', fullName: 'Somatic & cognitive Anxiety', status: 'not-started', screen: 'BAIQuestionnaire' },
+    { id: 'pcl5', name: 'PCL-5', fullName: 'PTSD', status: 'not-started', screen: 'PCL5Questionnaire' },
+    { id: 'psqi', name: 'PSQI', fullName: 'Sleep quality', status: 'not-started', screen: 'PSQIQuestionnaire' },
+    { id: 'bdi2', name: 'BDI-II', fullName: 'Depressive Severity', status: 'not-started', screen: 'BDIQuestionnaire' },
   ]);
 
   // Check if all questionnaires are completed
@@ -51,11 +59,17 @@ export default function PsychologicalInsight() {
   ];
 
   const handleQuestionnairePress = (id: string) => {
-    // For demo purposes, toggle status
-    setQuestionnaires((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, status: q.status === 'completed' ? 'not-started' : 'completed' } : q))
-    );
-    console.log(`Open questionnaire: ${id}`);
+    const questionnaire = questionnaires.find(q => q.id === id);
+    
+    if (questionnaire?.screen) {
+      navigation.navigate(questionnaire.screen);
+    } else {
+      console.log(`Questionnaire not yet implemented: ${id}`);
+      // For demo purposes, toggle status for non-implemented questionnaires
+      setQuestionnaires((prev) =>
+        prev.map((q) => (q.id === id ? { ...q, status: q.status === 'completed' ? 'not-started' : 'completed' } : q))
+      );
+    }
   };
 
   const insights = [

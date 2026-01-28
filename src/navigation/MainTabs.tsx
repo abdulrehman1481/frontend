@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Home from '../screens/main/Home';
 import PhysiologicalInsight from '../screens/main/PhysiologicalInsight';
 import Stimulation from '../screens/main/Stimulation';
-import PsychologicalInsight from '../screens/main/PsychologicalInsight';
+import PsychologicalStack from './PsychologicalStack';
 import Settings from '../screens/main/Settings';
 
 const Tab = createBottomTabNavigator();
@@ -65,7 +65,7 @@ export default function MainTabs() {
       />
       <Tab.Screen 
         name="PsychologicalInsight" 
-        component={PsychologicalInsight} 
+        component={PsychologicalStack} 
         options={{ tabBarLabel: 'Psychological' }}
       />
       <Tab.Screen 
